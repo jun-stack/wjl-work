@@ -313,7 +313,7 @@ async function startRecording() {
     const stream = await navigator.mediaDevices.getUserMedia(constraints)
     mediaRecorder.value = new MediaRecorder(stream, {
       mimeType: 'audio/webm; codecs=opus',
-      audioBitsPerSecond: 128000,
+      audioBitsPerSecond: 128000, // 设置音频比特率为 128kbps
     })
 
     mediaRecorder.value.ondataavailable = async (event) => {
@@ -332,6 +332,7 @@ async function startRecording() {
       handleError(error, '录音出错，请重试')
     }
 
+    // 开始录制
     mediaRecorder.value.start(100)
     isRecording.value = true
   }
