@@ -75,9 +75,10 @@ const calculateIconSize = (currentZoom) => {
 /** 创建并显示信息窗口 */
 const showInfoWindow = (map, point) => {
   // 移除之前的信息窗口（如果存在）
-  const allOverlays = map.getOverlays()
+  const allOverlays = map.getOverlays() // 获取当前地图上的所有覆盖物，返回覆盖物对象的集合 Array<Overlay>
   allOverlays.forEach((overlay) => {
     if (overlay._customInfo) {
+      // 从地图中移除覆盖物。如果覆盖物从未被添加到地图中，则该移除不起任何作用
       map.removeOverlay(overlay)
     }
   })
@@ -85,18 +86,18 @@ const showInfoWindow = (map, point) => {
   // 创建自定义覆盖物
   class CustomInfoBox extends BMapGL.Overlay {
     constructor(point, content) {
-      super()
-      this._point = point
-      this._content = content
-      this._customInfo = true
+      super() // 调用父类的构造函数
+      this._point = point // 保存传入的地理坐标点
+      this._content = content // 保存传入的 HTML 内容
+      this._customInfo = true // 标记为自定义信息窗口
     }
 
     initialize(map) {
-      this._map = map
-      const div = document.createElement('div')
-      div.style.position = 'absolute'
-      div.innerHTML = this._content
-      map.getPanes().labelPane.appendChild(div)
+      this._map = map // 保存地图实例
+      const div = document.createElement('div') // 创建一个 HTML 容器
+      div.style.position = 'absolute' // 设置样式
+      div.innerHTML = this._content // 设置内容
+      map.getPanes().labelPane.appendChild(div) // 将容器添加到地图的 `labelPane`
       this._div = div
 
       // 添加点击事件监听
@@ -112,15 +113,15 @@ const showInfoWindow = (map, point) => {
         })
       }
 
-      return div
+      return div // 返回创建的 DOM 元素
     }
 
     draw() {
-      const position = this._map.pointToOverlayPixel(this._point)
-      this._div.style.left = `${position.x - 150}px` // 250/2，使其居中
+      const position = this._map.pointToOverlayPixel(this._point) // 将地理坐标转换为像素坐标
+      this._div.style.left = `${position.x - 150}px` // 250/2，使其居中（设置水平位置）
       // 获取实际内容高度并添加一个固定的间距值（10px）
       const height = this._div.offsetHeight
-      this._div.style.top = `${position.y - height - 20}px` // 使用动态高度进行定位
+      this._div.style.top = `${position.y - height - 20}px` // 使用动态高度进行定位（设置垂直位置）
     }
   }
 
@@ -215,9 +216,10 @@ const showInfoWindow = (map, point) => {
 
     // 创建并添加自定义覆盖物
     const customOverlay = new CustomInfoBox(
-      new BMapGL.Point(point.longitude, point.latitude),
-      content,
+      new BMapGL.Point(point.longitude, point.latitude), // 地理坐标点
+      content, // 自定义 HTML 内容
     )
+    // 将覆盖物添加到地图中，一个覆盖物实例只能向地图中添加一次
     map.addOverlay(customOverlay)
   })
 }
