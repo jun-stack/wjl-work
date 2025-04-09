@@ -168,3 +168,19 @@ export const calculateIconSize = (currentZoom) => {
     return Math.round(minSize + (currentZoom - 18) * (maxSize - minSize) / (20 - 18))
   }
 }
+
+/** 高德坐标转百度坐标
+ * @param {number} lng 高德经度
+ * @param {number} lat 高德纬度
+ * @returns {[number, number]} 返回[经度, 纬度]
+ */
+export const convertGdToBd = (lng, lat) => {
+  const X_PI = Math.PI * 3000.0 / 180.0
+  const x = lng
+  const y = lat
+  const z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * X_PI)
+  const theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * X_PI)
+  const bdLng = z * Math.cos(theta) + 0.0065
+  const bdLat = z * Math.sin(theta) + 0.006
+  return [bdLng, bdLat]
+}
